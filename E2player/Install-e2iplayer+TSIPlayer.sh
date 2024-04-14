@@ -51,10 +51,10 @@ if [ ! -r $PLUGIN_DIR ]; then
 	fi
 	echo ""
 	#wget --no-check-certificate "https://github.com/oe-mirrors/e2iplayer/archive/refs/heads/python3.zip" -O /tmp/e2iplayer-python3.zip > /dev/null 2>&1
-	wget -q "--no-check-certificate" https://gitlab.com/MOHAMED_OS/e2iplayer/-/archive/main/e2iplayer-main.tar.gz -O /tmp/e2iplayer-python3.zip
+	wget -q "--no-check-certificate" https://raw.githubusercontent.com/code-zeroone/My_E2Store/main/E2player/e2iplayer-main.tar.gz -O /tmp/e2iplayer-python3.zip
 	#wget -q "--no-check-certificate" https://gitlab.com/zadmario/e2iplayer/-/archive/master/e2iplayer-master.tar.gz -O /tmp/e2iplayer-python3.zip
 	if [ $? -gt 0 ] ;then
-		wget -q "--no-check-certificate" https://gitlab.com/MOHAMED_OS/e2iplayer/-/archive/main/e2iplayer-main.tar.gz -O /tmp/e2iplayer-python3.zip
+		wget -q "--no-check-certificate" https://raw.githubusercontent.com/code-zeroone/My_E2Store/main/E2player/e2iplayer-main.tar.gz -O /tmp/e2iplayer-python3.zip
 		#wget -q "--no-check-certificate" https://gitlab.com/zadmario/e2iplayer/-/archive/master/e2iplayer-master.tar.gz -O /tmp/e2iplayer-python3.zip
 		if [ $? -gt 0 ] ;then
 			echo "error downloading archive, end"
@@ -85,10 +85,10 @@ else
 	fi
 	echo ""
 	#wget --no-check-certificate "https://github.com/oe-mirrors/e2iplayer/archive/refs/heads/python3.zip" -O /tmp/e2iplayer-python3.zip > /dev/null 2>&1
-	wget -q "--no-check-certificate" https://gitlab.com/MOHAMED_OS/e2iplayer/-/archive/main/e2iplayer-main.tar.gz -O /tmp/e2iplayer-python3.zip
+	wget -q "--no-check-certificate" https://raw.githubusercontent.com/code-zeroone/My_E2Store/main/E2player/e2iplayer-main.tar.gz -O /tmp/e2iplayer-python3.zip
 	#wget -q "--no-check-certificate" https://gitlab.com/zadmario/e2iplayer/-/archive/master/e2iplayer-master.tar.gz -O /tmp/e2iplayer-python3.zip
 	if [ $? -gt 0 ] ;then
-		wget -q "--no-check-certificate" https://gitlab.com/MOHAMED_OS/e2iplayer/-/archive/main/e2iplayer-main.tar.gz -O /tmp/e2iplayer-python3.zip
+		wget -q "--no-check-certificate" https://raw.githubusercontent.com/code-zeroone/My_E2Store/main/E2player/e2iplayer-main.tar.gz -O /tmp/e2iplayer-python3.zip
 		#wget -q "--no-check-certificate" https://gitlab.com/zadmario/e2iplayer/-/archive/master/e2iplayer-master.tar.gz -O /tmp/e2iplayer-python3.zip
 		if [ $? -gt 0 ] ;then
 			echo "error downloading archive, end"
