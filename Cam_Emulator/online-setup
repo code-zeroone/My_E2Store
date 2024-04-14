@@ -1,0 +1,96 @@
+#!/bin/bash
+# coding BY: MOHAMED_OS
+
+PkgName="enigma2-plugin-softcams-"
+Link='https://gitlab.com/MOHAMED_OS/dz_store/-/raw/main/Cam_Emulator/'
+show_man_page() {
+    printf '===== Emulator - online installation script =====\n'
+    printf 'USAGE:\n'
+    printf '      wget -qO- --no-check-certificate "%sonline-setup" | bash -s <ARGUMENT>\n' "${Link}"
+    printf '   OR:\n'
+    printf '      curl -LJso- "%sonline-setup" | bash -s <ARGUMENT>\n' "${Link}"
+    printf 'ARGUMENT:\n'
+    printf '      oscam ....... install OSCam Only\n'
+    printf '      ncam ..... install NCam Only\n'
+    printf '      powercam .... install PowerCam Only\n'
+    printf '      gosatplus .... install GoSatPlus Only\n'
+    printf '      ultracam .... install UltraCam Only\n'
+    printf '      gosatplus-oscam ....... install OSCam And GoSatPlus\n'
+    printf '      gosatplus-ncam ..... install NCam And GoSatPlus\n'
+    printf '      powercam-oscam .... install OSCam And PowerCam\n'
+    printf '      powercam-ncam .... install NCam And PowerCam\n'
+    printf '      ultracam-oscam ....... install OSCam And UltraCam\n'
+    printf '      ultracam-ncam ..... install NCam And UltraCam\n'
+    printf '      supcam-oscam ....... install OSCam And SupCam\n'
+    printf '      supcam-ncam ..... install NCam And SupCam\n'
+}
+if [ -f /etc/opkg/opkg.conf ]; then
+    status='/var/lib/opkg/status'
+    update='opkg update >/dev/null 2>&1'
+    install='opkg install'
+    remove='opkg remove --force-depends'
+    installed='opkg list-installed'
+elif [ -f /etc/apt/apt.conf ]; then
+    status='/var/lib/dpkg/status'
+    update='apt-get update >/dev/null 2>&1'
+    install='apt-get install --fix-broken --yes --assume-yes'
+    remove='apt-get purge --auto-remove'
+    installed='apt-get list-installed'
+fi
+e2_depndes() {
+    if ! grep -qs "Package: $1" "${status}"; then
+        ${update}
+        wait
+        printf "========| Need to install %s\n |========" "$1"
+        ${install} "$1"
+        wait
+        clear
+    fi
+}
+cam_del_old_versions() {
+    NamePkg="${PkgName}$1"
+    if [ -z "$(${installed} "${NamePkg}" | awk '{ print $3 }')" ]; then
+        echo
+        clear
+    else
+        ${remove} "${NamePkg}"
+    fi
+}
+e2_depndes "curl"
+[ -z "$1" ] && {
+    show_man_page
+    printf "\nError ! No argument found !\n"
+    exit 1
+}
+cam_del_old_versions "$1"
+curl --help >/dev/null 2>&1 && DOWNLOADER="curl -L -J -s -o" || DOWNLOADER="wget --no-check-certificate -q -O"
+
+VER=$($DOWNLOADER - "${Link}version" | grep "$1" | cut -d= -f2)
+
+if [ "$1" = 'gosatplus-oscam' ] || [ "$1" = 'powercam-oscam' ] || [ "$1" = 'ultracam-oscam' ]; then
+    VER=$($DOWNLOADER - "${Link}version" | grep "oscam" | cut -d= -f2)
+elif [ "$1" = 'gosatplus-ncam' ] || [ "$1" = 'powercam-ncam' ] || [ "$1" = 'ultracam-ncam' ]; then
+    VER=$($DOWNLOADER - "${Link}version" | grep "ncam" | cut -d= -f2)
+fi
+
+FNAME=${PkgName}"$1"_${VER}_all.$([ -d /etc/dpkg ] && echo -n 'deb' || echo -n 'ipk')
+case "$1" in
+oscam | ncam | powercam | ultracam | gosatplus | gosatplus-oscam | gosatplus-ncam | powercam-oscam | powercam-ncam | ultracam-oscam | ultracam-ncam | supcam-oscam | supcam-ncam)
+    [ -z "$VER" ] && {
+        printf "Error ! The online version was not recognized !\n"
+        exit 1
+    }
+    $DOWNLOADER "/tmp/${FNAME}" "${Link}${FNAME}" || {
+        printf "Error ! File download failed !\n"
+        exit 1
+    }
+    cam_del_old_versions
+    ${install} "/tmp/${FNAME}"
+    rm -f "/tmp/${FNAME}"
+    ;;
+*)
+    show_man_page
+    printf "\nError ! Wrong argument !\n"
+    exit 1
+    ;;
+esac
